@@ -23,7 +23,7 @@ class Library
 
         Step5();
     }
-    virtual ~Library() {}
+    virtual ~Library() {        cout << "Liraray" << endl;}
 
   protected:
     void Step1()

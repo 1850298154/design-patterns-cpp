@@ -11,6 +11,8 @@ class Application : public Library
 	{
 		//... 子类重写实现
 		cout << "override Step2" << endl;
+        std::cout << "Class Name: " << typeid(*this).name() << std::endl; // 输出当前类名
+        std::cout << "Function Name: " << __func__ << std::endl; // 输出当前函数名
 		return true;
 	}
 
@@ -19,6 +21,7 @@ class Application : public Library
 		//... 子类重写实现
 		cout << "override Step4" << endl;
 	}
+	virtual ~Application() { cout << "Application" << endl; } 
 };
 
 int main()

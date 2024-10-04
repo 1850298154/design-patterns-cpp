@@ -47,7 +47,7 @@ class IProgress{
 };
 
 
-// 
+// 一个主的继承类，其他都是接口
 class MainForm : public Form, public IProgress
 {
 	TextBox* txtFilePath;
@@ -65,9 +65,13 @@ public:
 
 		FileSplitter splitter(filePath, number);
 
+		// 观察者 自己决定 是否订阅通知
 		splitter.addIProgress(this); //订阅通知
 		splitter.addIProgress(&cn); //订阅通知
 
+		// 目标对象 内部发送通知 
+		// 通知观察者 的update 
+		// 目标对象对具体实现一无所知
 		splitter.split();
 
 		splitter.removeIProgress(this);
