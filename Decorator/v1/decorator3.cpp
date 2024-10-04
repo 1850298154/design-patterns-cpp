@@ -52,9 +52,12 @@ public:
     
 };
 
+
+///////////////////////////////
 //扩展操作
 
 // 由于两个子类有相同的成员Stream*，所以这个成员要往上提
+// 继承中间基类
 class DecoratorStream: public Stream{
 protected:
     Stream* stream;//...

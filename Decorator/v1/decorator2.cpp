@@ -55,9 +55,10 @@ public:
 //扩展操作
 
 // 三个子类变为一个子类，用组合代替继承
-class CryptoStream: public Stream {
+class CryptoStream: public Stream // 继承抽象接口， 是为了 定义接口规范
+{
     
-    Stream* stream;//...
+    Stream* stream;//... = new FileStream (); //FileStream NetworkStream MemoryStream
 
 public:
     CryptoStream(Stream* stm):stream(stm){
@@ -68,16 +69,18 @@ public:
     virtual char Read(int number){
        
         //额外的加密操作...
-        stream->Read(number);//读文件流
+        stream->Read(number);//读文件流         都修改成这种->
     }
     virtual void Seek(int position){
         //额外的加密操作...
-        Stream::Seek(position);//定位文件流
+        // Stream::Seek(position);//定位文件流     都修改成这种->
+        stream->Seek(position);//定位文件流     都修改成这种->
         //额外的加密操作...
     }
     virtual void Write(char data){
         //额外的加密操作...
-        Stream::Write(data);//写文件流
+        // Stream::Write(data);//写文件流
+        stream->Write(data);//写文件流
         //额外的加密操作...
     }
 };
@@ -109,6 +112,14 @@ public:
 
 void Process(){
 
+/*
+    //编译时装配
+    CryptoFileStream *fs1 = new CryptoFileStream();
+
+    BufferedFileStream *fs2 = new BufferedFileStream();
+
+    CryptoBufferedFileStream *fs3 =new CryptoBufferedFileStream();
+*/
     //运行时装配
     FileStream* s1=new FileStream();
     CryptoStream* s2=new CryptoStream(s1);
@@ -119,4 +130,8 @@ void Process(){
     
     
 
+}
+
+int main() {
+    Process();
 }
