@@ -1717,3 +1717,380 @@ https://www.bilibili.com/video/BV14Ns8eEERu/?spm_id_from=333.1007.tianma.1-1-1.c
 python 使用的是 代码点
 ![alt text](zFigures/zyt重构/image-1.png)
 ![alt text](zFigures/zyt重构/image-2.png)
+
+## 中断器
+
+### 解释与总结
+
+**中断器 (Interceptors)** 是一种软件结构，能够中断正常的控制流，允许其他代码运行。它在基于对象的分布式系统中非常有用，能够实现对象中间件的功能，支持远程对象调用。具体过程如下：
+
+1. **本地接口调用**：本地应用程序中的对象 A 提供一个接口，该接口与另一台机器上的对象 B 提供的接口完全相同。A 只需要调用该接口中的一个方法变量即可。
+2. **中断与激活**：A 的调用被中断器中断，转换为一个通用的对象激活。这可以通过与 A 在同一台机器上的中间件所提供的对象激活接口来完成。
+3. **消息传输**：该通用对象激活再被中断转换为一个系统级消息，该消息可以通过 A 的本地操作系统所提供的传输层网络接口来完成。
+
+这种机制隐藏了 A 和 B 对象实际是分布存储的事实，实现了远程对象调用。中断器作为底层组件，实现了接口调用的映射，提供了中间件的机制。
+
+### 目前可以使用的技术框架
+
+以下是一些支持中断器和远程对象调用的技术框架：
+
+1. **Java RMI (Remote Method Invocation)**：
+   - Java RMI 是 Java 提供的一种机制，允许在不同 JVM 上运行的对象相互调用方法。
+   - 适用于基于 Java 的分布式系统。
+
+2. **Spring AOP (Aspect-Oriented Programming)**：
+   - Spring AOP 提供了拦截器的实现，可以在方法调用前后执行额外的逻辑。
+   - 适用于基于 Spring 框架的应用程序。
+
+3. **Apache Thrift**：
+   - Thrift 是一个跨语言的 RPC 框架，支持多种编程语言。
+   - 适用于需要跨语言通信的分布式系统。
+
+4. **gRPC**：
+   - gRPC 是一个高性能的 RPC 框架，基于 HTTP/2 协议，支持多种编程语言。
+   - 适用于需要高性能和多语言支持的分布式系统。
+
+5. **.NET Remoting**：
+   - .NET Remoting 是 .NET 框架提供的一种机制，允许在不同应用程序域之间进行远程对象调用。
+   - 适用于基于 .NET 的分布式系统。
+
+这些框架都提供了类似中断器的机制，能够实现远程对象调用和分布式系统的功能。选择具体框架时，可以根据项目的编程语言、性能需求和系统架构来决定。
+
+## OS 架构
+
+https://cloud.tencent.com/developer/article/2145551
+
+
+---
+created: 2024-10-05T15:13:06 (UTC +08:00)
+tags: [abstraction,hierarchy,操作系统,模块化]
+source: https://cloud.tencent.com/developer/article/2145551
+author: 
+---
+
+> 即模块化(modularity)、抽象（abstraction)、分层(layering)和层级(hierarchy)
+
+---
+### 操作系统的设计目标
+
+操作系统的设计目标可以分为两种：
+
+1、用户目标：方便使用、容易学习、可靠、安全以及流畅等
+
+2、系统目标：易于实现与维护、灵活，可靠、不易出错、高效等。
+
+### 操作系统的机制与策略
+
+如何有效控制操作系统的复杂度？这里有一个很重要的设计原则：**将策略与机制相分离**
+
+策略表示“要做什么”，机制表示“该如何做”
+
+### 管理复杂系统的重要方法：M.A.L.H
+
+即模块化(modularity)、抽象（abstraction)、分层(layering)和层级(hierarchy)
+
+**模块化：**划分模块，分而治之。需要充分考虑高内聚和低耦合
+
+**抽象：**在模块化的基础上，**将接口与内部实现分离。**
+
+**宽进严出原则**
+
+一个模块的接口应当容忍各种可能的输入，一直错误甚至恶意的输入，避免错误或而已输入的效果在模块内传播，并且尽可能地控制模块对外的输出，从而减少错误在模块之间的传播。
+
+**分层：**一个模块只能和同层模块以及相邻的上下层模块进行交互，不能跨层交互。
+
+**层级：**首先将一些功能相近的模块组成一个具有清晰接口的自包含子系统，然后再将这些子系统递归地组成一个具有清晰接口的更大系统。可以参考公司的组织架构
+
+**分层是不同类模块之间的层级，而层级则是指同类模块之间的分层。**
+
+### 操作系统的内核架构
+
+![](https://ask.qcloudimg.com/http-save/yehe-4630227/731af155eb8dddce9515fa4ebf5304a3.jpg)
+
+> 参考资料 《现代操作系统：原理与实现》陈海波 夏虞斌等著
+
+**转载请注明来源：**[**https://www.longjin666.top/?p=1162**](https://cloud.tencent.com/developer/tools/blog-entry?target=https%3A%2F%2Fwww.longjin666.top%2F%3Fp%3D1162&source=article&objectId=2145551)
+
+本文参与 [腾讯云自媒体同步曝光计划](https://cloud.tencent.com/developer/support-plan)，分享自作者个人站点/博客。
+
+原始发表：2021年9月6日20，
+
+如有侵权请联系 [cloudcommunity@tencent.com](mailto:cloudcommunity@tencent.com) 删除
+
+## shell语法中，哪些是机制？哪些是策略？
+
+在 Shell 语法中，机制和策略的分离可以通过以下方式理解：
+
+### 机制
+机制是指实现 Shell 功能的**具体语法和命令**。这些包括：
+
+1. **命令执行**：
+   - `command_name`：执行具体的命令。
+   - `&&`, `||`, `;`：用于控制命令的执行顺序和条件。
+
+2. **变量管理**：
+   - `VAR=value`：定义变量。
+   - `echo $VAR`：访问变量的值。
+
+3. **流程控制**：
+   - `if`, `then`, `else`, `fi`：条件判断。
+   - `for`, `while`, `until`：循环结构。
+
+4. **函数定义**：
+   - `function_name() { ... }`：定义和调用函数。
+
+5. **输入输出重定向**：
+   - `>`, `>>`, `<`, `|`：管理输入输出流。
+
+### 策略
+策略则是指**如何使用**这些机制来实现特定的目标或行为。它涉及到高层次的决策，而不是具体的实现细节。例如：
+
+1. **错误处理策略**：
+   - 选择在某个命令失败后，是否继续执行后续命令（使用 `set -e`）。
+
+2. **资源管理策略**：
+   - 选择如何并行执行多个任务，或者如何在任务之间共享资源。
+
+3. **环境配置策略**：
+   - 决定使用哪些环境变量、路径等来影响脚本的行为。
+
+4. **代码组织策略**：
+   - 如何将功能模块化，比如选择使用函数还是直接在脚本中编写逻辑。
+
+### 总结
+- **机制**是具体的语法和命令，决定“怎么做”。
+- **策略**是如何组合和使用这些机制以实现特定目标，决定“做什么”。 
+
+这种分离使得用户可以灵活地调整策略，同时依然利用 Shell 提供的各种机制。
+
+## C4 plantUML "Context, Containers, Components, and Code" 
+
+C4 是 "Context, Containers, Components, and Code" 的缩写，它是一种用于软件架构建模的方法论，由 Simon Brown 提出。C4 模型旨在帮助团队更清晰地理解和描述系统的架构，尤其是在复杂的软件系统中。C4 模型分为四个层次：
+
+1. **Context Diagram**（上下文图）：
+   - 展示系统与外部实体（如用户、其他系统）的关系。
+
+2. **Container Diagram**（容器图）：
+   - 描述系统内部的主要容器（如应用程序、数据库、微服务等），以及它们之间的关系。
+
+3. **Component Diagram**（组件图）：
+   - 显示容器内部的主要组件及其交互。
+
+4. **Code Diagram**（代码图）：
+   - 更细致地展示组件内部的类和对象，以及它们的关系。
+
+### C4-PlantUML
+
+在 Visual Studio Code 中，使用 C4-PlantUML 插件可以方便地绘制上述四个层次的 UML 图，通过简单的文本描述生成相应的可视化图形。这种方式使得架构师和开发人员能够快速迭代和更新他们的设计图。
+
+### 例子
+
+以下是一个简单的 C4 上下文图的 PlantUML 示例：
+
+```puml
+@startuml
+!include C4.puml
+
+Person(admin, "Admin", "An administrator of the system.")
+System(system, "My System", "Does awesome things.")
+
+Rel(admin, system, "Uses")
+
+@enduml
+```
+
+在这个示例中，我们定义了一个管理员角色和一个系统，并标明了它们之间的关系。
+
+### 总结
+
+C4 方法提供了一种结构化的方式来描述软件系统的架构，而 C4-PlantUML 则是将这种方法通过 PlantUML 工具实现的一种方式，方便开发者在 Visual Studio Code 中创建和维护架构图。
+
+## DSL 是 "Domain-Specific Language"
+
+DSL 是 "Domain-Specific Language" 的缩写，指的是一种针对特定领域或特定问题的编程语言或建模语言。与通用编程语言（如 Java、Python）不同，DSL 通常设计得更为简洁和专注，以便于解决特定领域内的任务。
+
+### DSL 的特点
+
+1. **专用性**：
+   - DSL 针对特定领域的需求进行优化，提供相关的语法和功能，使得开发人员可以更高效地表达概念。
+
+2. **易读性**：
+   - DSL 通常采用接近自然语言的表达方式，使得非专业人士也能理解和使用。
+
+3. **简化复杂性**：
+   - 通过抽象出领域内的共性，DSL 可以减少需要编写的代码量，从而降低复杂性。
+
+### C4 DSL
+
+在上下文中，C4 DSL 是用于描述 C4 模型（Context, Containers, Components, Code）的特定语言。通过这种 DSL，用户能够以简单的文本格式定义系统架构，并使用工具（如 PlantUML）将其转换为可视化图形。
+
+### 示例
+
+以下是 C4 DSL 的一个简单示例，用于描述一个系统的上下文：
+
+```plaintext
+Person(admin, "Admin", "An administrator of the system.")
+System(system, "My System", "Does awesome things.")
+Rel(admin, system, "Uses")
+```
+
+这个 DSL 描述了一个管理员和系统之间的关系，非常直观且易于理解。
+
+### 总结
+
+DSL 提供了一种高效的方式来处理特定领域的问题，而 C4 DSL 则是针对软件架构设计而创建的，帮助团队更好地沟通和记录他们的系统架构。
+
+
+## 类图关系
+
+当然可以！以下是一个使用 PlantUML 描述 UML 类图中类与类之间关系的示例代码，以及生成的图像说明。
+
+### PlantUML 代码示例
+
+```puml
+@startuml
+
+class ClassA {
+    +methodA()
+}
+
+class ClassB {
+    +methodB()
+}
+
+class ClassC {
+    +methodC()
+}
+
+class ClassD {
+    +methodD()
+}
+
+ClassA --> ClassB : uses
+ClassB --|> ClassC : extends
+ClassC o-- ClassD : composition
+ClassA ..> ClassD : dependency
+
+@enduml
+```
+
+### UML 类图关系说明
+
+1. **`uses`（依赖关系）**：
+   - 表示一个类使用另一个类，但不拥有它。例如：`ClassA` 使用 `ClassB`。
+
+2. **`extends`（继承关系）**：
+   - 表示一个类继承自另一个类。这里 `ClassB` 继承自 `ClassC`。
+
+3. **`composition`（组合关系）**：
+   - 表示一个类完全拥有另一个类的生命周期。这里 `ClassC` 组合了 `ClassD`。
+
+4. **`dependency`（依赖关系）**：
+   - 表示一个类依赖于另一个类，即一个类的变更可能影响另一个类。这里 `ClassA` 依赖于 `ClassD`。
+
+### 生成的图像
+
+你可以使用 PlantUML 工具来生成上述代码对应的 UML 类图。只需将代码粘贴到支持 PlantUML 的工具中，例如在线 PlantUML 编辑器，便能生成相应的图像。
+
+这样就完整展示了 UML 中类与类之间的各种关系，并标注了关系的名字。希望这对你有帮助！
+
+
+## 除了面向对象，还有什么其他的手法？将所要创建的具体对象工作延迟到子类， 从而实现一种扩展 （而非更改） 的策略， 较好地解决了这种紧耦合关系。
+
+除了面向对象的方式外，Factory Method模式可以通过以下几种其他手法来实现对象创建与扩展：
+
+### 1. **函数式编程**
+在函数式编程中，可以使用高阶函数来创建对象。这些函数可以接收其他函数作为参数，从而实现延迟创建和扩展。
+
+```javascript
+// JavaScript 示例
+const createObject = (type) => {
+    const factories = {
+        car: () => ({ type: 'Car', wheels: 4 }),
+        bike: () => ({ type: 'Bike', wheels: 2 }),
+    };
+    return factories[type] ? factories[type]() : null;
+};
+
+const myCar = createObject('car');
+const myBike = createObject('bike');
+```
+
+### 2. **配置模式（Configuration Pattern）**
+通过使用配置文件或参数来决定创建哪个具体对象。这种方式可以使对象的创建逻辑与业务逻辑分离。
+
+```yaml
+# config.yaml
+vehicles:
+  - type: car
+  - type: bike
+```
+
+```python
+import yaml
+
+with open("config.yaml", 'r') as file:
+    config = yaml.safe_load(file)
+
+for vehicle in config['vehicles']:
+    if vehicle['type'] == 'car':
+        # 创建 Car 对象
+    elif vehicle['type'] == 'bike':
+        # 创建 Bike 对象
+```
+
+### 3. **服务定位器模式（Service Locator Pattern）**
+使用一个中央注册表来查找和创建对象。客户端请求对象时，不需要知道具体的实现类。
+
+```java
+public class ServiceLocator {
+    private static final Map<String, Service> services = new HashMap<>();
+
+    public static void registerService(String name, Service service) {
+        services.put(name, service);
+    }
+
+    public static Service getService(String name) {
+        return services.get(name);
+    }
+}
+```
+
+### 4. **原型模式（Prototype Pattern）**
+通过克隆现有的对象来创建新对象。这种方式使得对象的创建不依赖于具体的类。
+
+```java
+public class Prototype implements Cloneable {
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+}
+
+// 使用原型创建新对象
+Prototype prototype = new Prototype();
+Prototype newObject = (Prototype) prototype.clone();
+```
+
+### 5. **枚举类型（Enum）**
+在某些语言中，可以使用枚举来定义固定的一组实例，并通过枚举值来创建对象。
+
+```java
+public enum VehicleType {
+    CAR, BIKE;
+
+    public Vehicle create() {
+        switch (this) {
+            case CAR: return new Car();
+            case BIKE: return new Bike();
+            default: throw new IllegalArgumentException();
+        }
+    }
+}
+
+// 使用枚举创建对象
+Vehicle myCar = VehicleType.CAR.create();
+```
+
+### 总结
+除了面向对象的方法，使用函数式编程、配置模式、服务定位器模式、原型模式和枚举类型等手法也能有效地实现对象的延迟创建和扩展，从而减少紧耦合关系，提高系统的灵活性和可维护性。

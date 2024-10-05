@@ -1,0 +1,24 @@
+@startuml relationDiagram
+
+class ClassA {
+    +methodA()
+}
+
+class ClassB {
+    +methodB()
+}
+
+class ClassC {
+    +methodC()
+}
+
+class ClassD {
+    +methodD()
+}
+
+ClassA --> ClassB : uses
+ClassB --|> ClassC : extends
+ClassC o-- ClassD : composition
+ClassA ..> ClassD : dependency
+
+@enduml

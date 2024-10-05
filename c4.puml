@@ -1,0 +1,9 @@
+@startuml MyDiagram
+' !include C4.puml
+
+Person(admin, "Admin", "An administrator of the system.")
+System(system, "My System", "Does awesome things.")
+
+Rel(admin, system, "Uses")
+
+@enduml
